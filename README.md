@@ -13,4 +13,6 @@ open `Package Manager Console` in `Microsoft Visual Studio` and insert next comm
 ```bash
 PM> Update-Package -reinstall
 ```
-and try to buld project again
+and try to buld project again<br>
+
+![](https://img.shields.io/appveyor/ci/gruntjs/grunt.svg?colorB=green&label=bulid&logo=1nk1&logoColor=cyan&style=plastic)
