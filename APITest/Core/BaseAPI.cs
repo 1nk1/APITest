@@ -22,12 +22,11 @@ namespace APITest.Core
 
         private static HttpClient CreateClient()
         {
-            var client = new HttpClient
-            {
-                BaseAddress = new Uri("https://petstore.swagger.io/v2/pet/")
+            var client = new HttpClient {
+                BaseAddress = new Uri("https://petstore.swagger.io/v2/pet/"), 
+                DefaultRequestHeaders = {{"X-Token", _apiKey}}
             };
             client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Add("X-Token", _apiKey);
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, SslPolicyErrors) => true;
             return client;
         }

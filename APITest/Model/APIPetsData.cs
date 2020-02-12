@@ -32,6 +32,7 @@ namespace APITest.Model
         [DataMember(Name = "name")]
         public string Name { get; set; }
     }
+
     [DataContract(Name = "category")]
     public class Category
     {

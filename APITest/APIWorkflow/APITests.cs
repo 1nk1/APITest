@@ -1,7 +1,7 @@
 ﻿using APITest.Core;
 using APITest.Model;
 using NUnit.Framework;
-using System;
+using System.Net;
 
 namespace APITest.APIWorkflow
 {
@@ -14,7 +14,7 @@ namespace APITest.APIWorkflow
         [TestCase("Dog",      14, "Animal", 1, "Everything",  10, "Go to the trip")]
         [TestCase("Elephant", 15, "Animal", 1, "[0]",         10, "Rework")]
         [TestCase("Snake",    25, "Animal", 1, "Maybe 1",     10, "Eat")]
-        public void PostRequest(string nameAnimal, int id, string categoryName, int categoryId, string TagsName, int tagId, string status)
+        public void POST(string nameAnimal, int id, string categoryName, int categoryId, string TagsName, int tagId, string status)
         {
             var petsData = new APIPetsData
             {
@@ -35,11 +35,14 @@ namespace APITest.APIWorkflow
                 Id = id,
                 PhotoUrls = new []
                 {
-                    "https://example.com/img1.jpeg"
+                    "https://example.com/Animal.jpeg",
+                    "https://example.com/Animal.png",
+                    "https://example.com/Animal.bmp",
+                    "https://example.com/Animal.jpg",
                 }
             };
-            var request = _client.PostAsync(string.Empty, AsStringContent(petsData.ToJSON())).Result;
-            var result = request.EnsureSuccessStatusCode();
+            var requestBody = _client.PostAsync(string.Empty, AsStringContent(petsData.ToJSON())).Result.Content.ReadAsStringAsync().Result;
+            StringFormatter.ShowConsoleMessage("POST", requestBody);
         }
 
         [Test]
@@ -48,14 +51,20 @@ namespace APITest.APIWorkflow
         [TestCase(14)]
         [TestCase(15)]
         [TestCase(25)]
-        public void GetRequest(int id)
+        public void GET(int id)
         {
             //var reqObj = "{\"id\": " + id +",\"category\": {\"id\": 0,\"name\": \"\" },\"name\": \"doggie\",\"photoUrls\": [\"\"],\"tags\": [{ \"id\": 0,\"name\": \"\" }],\"status\": \"available\"}";
             //var task = _client.GetAsync(id.ToString()).GetAwaiter().GetResult();
             //var response = task.Content.ReadAsAsync<APIPetsData>().ConfigureAwait(false).GetAwaiter().GetResult();
-            var req = _client.GetAsync(id.ToString()).Result.Content.ReadAsStringAsync().Result;
-            var res = req.FromJSON<APIPetsData>();
-            Console.WriteLine(res.ToJSON());
+            var requestBody = _client
+                              .GetAsync(id.ToString())
+                              .Result
+                              .Content
+                              .ReadAsStringAsync()
+                              .Result;
+
+            Assert.That(requestBody.FromJSON<APIPetsData>().Id = id, Is.EqualTo(id));
+            StringFormatter.ShowConsoleMessage("GET", requestBody);
         }
 
         [Test]
@@ -64,10 +73,11 @@ namespace APITest.APIWorkflow
         [TestCase(14)]
         [TestCase(15)]
         [TestCase(25)]
-        public void DeleteRequest(int id)
+        public void DELETE(int id)
         {
-            var petsData = new APIPetsData{Id = id};
-            var result = _client.PostAsync(string.Empty, AsStringContent(petsData.ToJSON())).Result.Content.ReadAsStringAsync().Result;
+            var petsData = new APIPetsData{ Id = id };
+            var requestBody  = _client.PostAsync(string.Empty, AsStringContent(petsData.ToJSON())).Result.Content.ReadAsStringAsync().Result;
+            StringFormatter.ShowConsoleMessage("DELETE", requestBody);
         }
-    }
+    } 
 }

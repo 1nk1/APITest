@@ -71,6 +71,7 @@
     <Compile Include="APIWorkflow\APITests.cs" />
     <Compile Include="Core\BaseAPI.cs" />
     <Compile Include="Core\Extension.cs" />
+    <Compile Include="Core\StringFormatter.cs" />
     <Compile Include="Model\APIPetsData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

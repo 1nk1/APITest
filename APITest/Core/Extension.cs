@@ -6,8 +6,7 @@ namespace APITest.Core
     {
         public static T FromJSON<T>(this string obj)
         {
-            var ret = JsonConvert.DeserializeObject<T>(obj);
-            return ret;
+            return JsonConvert.DeserializeObject<T>(obj);
         }
 
         public static string ToJSON(this object obj)
