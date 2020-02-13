@@ -7,7 +7,7 @@ cd APITest
 ```
 After import project in `Microsoft Visual Studio` and build project
 
-if project doen't buld you must make next steps: 
+if project doesn't buld you must make next steps: 
 open `Package Manager Console` in `Microsoft Visual Studio` and insert next command
 
 ```bash
