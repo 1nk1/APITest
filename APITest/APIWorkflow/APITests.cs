@@ -41,7 +41,11 @@ namespace APITest.APIWorkflow
                     "https://example.com/Animal.jpg",
                 }
             };
-            var requestBody = _client.PostAsync(string.Empty, AsStringContent(petsData.ToJSON())).Result.Content.ReadAsStringAsync().Result;
+            var requestBody = _client.PostAsync(string.Empty, AsStringContent(petsData.ToJSON()))
+                                .Result
+                                .Content
+                                .ReadAsStringAsync()
+                                .Result;
             StringFormatter.ShowConsoleMessage("POST", requestBody);
         }
 
