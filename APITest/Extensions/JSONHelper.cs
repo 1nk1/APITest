@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace APITest.Core
+namespace APITest.Extensions
 {
-    public static class Extension
+    public static class JSONHelper
     {
         public static T FromJSON<T>(this string obj)
         {

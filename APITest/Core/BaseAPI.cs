@@ -1,4 +1,5 @@
-﻿using System;
+﻿using APITest.Config;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -8,7 +9,7 @@ namespace APITest.Core
     public abstract class BaseAPI
     {
         protected readonly HttpClient _client;
-        protected const string _apiKey = "54682";
+
 
         protected BaseAPI()
         {
@@ -22,9 +23,14 @@ namespace APITest.Core
 
         private static HttpClient CreateClient()
         {
-            var client = new HttpClient {
-                BaseAddress = new Uri("https://petstore.swagger.io/v2/pet/"), 
-                DefaultRequestHeaders = {{"X-Token", _apiKey}}
+
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(Conf.GetValueForKey("BASE_URL")),
+                DefaultRequestHeaders =
+                {
+                    { "X-Token", Conf.GetValueForKey("API_KEY")}
+                }
             };
             client.DefaultRequestHeaders.Accept.Clear();
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, SslPolicyErrors) => true;
