@@ -44,4 +44,3 @@ C:\Users\root\Source\Repos\APITest\APITest\bin\Debug\System.Net.Http.Formatting.
 C:\Users\root\Source\Repos\APITest\APITest\obj\Debug\APITest.csproj.CopyComplete
 C:\Users\root\Source\Repos\APITest\APITest\obj\Debug\APITest.dll
 C:\Users\root\Source\Repos\APITest\APITest\obj\Debug\APITest.pdb
-C:\Users\Administrator\source\repos\APITest\APITest\obj\Debug\APITest.csprojAssemblyReference.cache

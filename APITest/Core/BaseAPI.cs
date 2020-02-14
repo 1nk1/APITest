@@ -8,8 +8,7 @@ namespace APITest.Core
 {
     public abstract class BaseAPI
     {
-        protected readonly HttpClient _client;
-
+        public HttpClient _client { get; }
 
         protected BaseAPI()
         {
