@@ -11,7 +11,7 @@ cd APITest
 #### if project doesn't buld you must make next steps: 
 #### open `Package Manager Console` -> `Microsoft Visual Studio` and insert next command
 
-```Power Shell
+```bash
 PM> Update-Package -reinstall
 ```
 #### and try to buld project again<br>
