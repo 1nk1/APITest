@@ -11,10 +11,10 @@ cd APITest
 #### if project doesn't buld you must make next steps: 
 #### open `Package Manager Console` -> `Microsoft Visual Studio` and insert next command
 
-```bash
+```Power Shell
 PM> Update-Package -reinstall
 ```
-#### and try to buld project again<br>
+and try to buld project again<br>
 
 
 ### After that you can run the test in Folder `[APIWorkflow]` -> `[APITests]`
