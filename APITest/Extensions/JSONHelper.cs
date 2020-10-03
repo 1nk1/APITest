@@ -2,16 +2,10 @@
 
 namespace APITest.Extensions
 {
-    public static class JSONHelper
+    public static class JsonHelper
     {
-        public static T FromJSON<T>(this string obj)
-        {
-            return JsonConvert.DeserializeObject<T>(obj);
-        }
+        public static T FromJson<T>(this string obj) => JsonConvert.DeserializeObject<T>(obj);
 
-        public static string ToJSON(this object obj)
-        {
-            return JsonConvert.SerializeObject(obj);
-        }
+        public static string ToJson(this object obj) => JsonConvert.SerializeObject(obj);
     }
 }

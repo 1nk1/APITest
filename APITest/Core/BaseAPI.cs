@@ -6,19 +6,11 @@ using System.Text;
 
 namespace APITest.Core
 {
-    public abstract class BaseAPI
+    public abstract class BaseApi
     {
-        public HttpClient _client { get; }
-
-        protected BaseAPI()
-        {
-            _client = CreateClient();
-        }
-
-        protected static StringContent AsStringContent(string source)
-        {
-            return new StringContent(source, Encoding.UTF8, "application/json");
-        }
+        public HttpClient Client { get; }
+        protected BaseApi() => Client = CreateClient();
+        protected static StringContent AsStringContent(string source) => new StringContent(source, Encoding.UTF8, "application/json");
 
         private static HttpClient CreateClient()
         {
@@ -32,7 +24,7 @@ namespace APITest.Core
                 }
             };
             client.DefaultRequestHeaders.Accept.Clear();
-            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, SslPolicyErrors) => true;
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
             return client;
         }
     }

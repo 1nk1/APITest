@@ -1,14 +1,18 @@
-﻿using APITest.Core;
+﻿using System;
+using System.IO;
+using APITest.Core;
 using APITest.Extensions;
 using APITest.Formatter;
 using APITest.Model;
 using NUnit.Framework;
 using System.Net;
+using System.Threading.Tasks;
+using FluentAssertions;
 
 namespace APITest.APIWorkflow
 {
     [TestFixture]
-    public class APITests : BaseAPI
+    public class ApiTests : BaseApi
     {
         [Test]
         [TestCase("Python", 12, "Animal", 1, "Everything", 10, "Sleep")]
@@ -16,9 +20,9 @@ namespace APITest.APIWorkflow
         [TestCase("Dog", 14, "Animal", 1, "Everything", 10, "Go to the trip")]
         [TestCase("Elephant", 15, "Animal", 1, "[0]", 10, "Rework")]
         [TestCase("Snake", 25, "Animal", 1, "Maybe 1", 10, "Eat")]
-        public void POST(string nameAnimal, int id, string categoryName, int categoryId, string tagsName, int tagId, string status)
+        public async Task Post(string nameAnimal, int id, string categoryName, int categoryId, string tagsName, int tagId, string status)
         {
-            var petsData = new APIPetsData
+            var petsData = new ApiPetsData
             {
                 Name = nameAnimal,
                 Category = new Category
@@ -44,15 +48,22 @@ namespace APITest.APIWorkflow
                 }
             };
 
-            var _requestBody = _client.PostAsync(string.Empty, AsStringContent(petsData.ToJSON())).Result.Content.ReadAsStringAsync().Result;
-            var DesObj = _requestBody.FromJSON<APIPetsData>();
+            var requestBody = await
+                (await Client.PostAsync(string.Empty, AsStringContent(petsData.ToJson()))
+                    .ConfigureAwait(false))
+                    .Content
+                    .ReadAsStringAsync()
+                    .ConfigureAwait(false);
 
-            Assert.That(DesObj.Name, Is.EqualTo(nameAnimal));
-            Assert.That(DesObj.Id, Is.EqualTo(id));
-            Assert.That(DesObj.Category.Name, Is.EqualTo(categoryName));
-            Assert.That(DesObj.Category.Id, Is.EqualTo(categoryId));
-            Assert.That(DesObj.Status, Is.EqualTo(status));
-            StringFormatter.POST(_requestBody);
+            var desObj = requestBody.FromJson<ApiPetsData>();
+
+            desObj.Should().BeDataContractSerializable(desObj.Name, nameAnimal);
+            desObj.Should().BeDataContractSerializable(desObj.Id.ToString(), id.ToString());
+            desObj.Should().BeDataContractSerializable(desObj.Category.Name, categoryName);
+            desObj.Should().BeDataContractSerializable(desObj.Category.Id.ToString(), categoryId.ToString());
+            desObj.Should().BeDataContractSerializable(desObj.Status, status);
+
+            StringFormatter.Post(requestBody);
         }
 
         [Test]
@@ -61,16 +72,17 @@ namespace APITest.APIWorkflow
         [TestCase(14)]
         [TestCase(15)]
         [TestCase(25)]
-        public void GET(int id)
+        public async Task Get(int id)
         {
-            //Another way!!!
-            //var task = _client.GetAsync(id.ToString()).GetAwaiter().GetResult();
-            //var response = task.Content.ReadAsAsync<APIPetsData>().ConfigureAwait(false).GetAwaiter().GetResult();
+            var requestBody = await
+                (await Client.GetAsync(id.ToString())
+                    .ConfigureAwait(false))
+                    .Content
+                    .ReadAsStringAsync()
+                    .ConfigureAwait(false);
 
-            var _requestBody = _client.GetAsync(id.ToString()).Result.Content.ReadAsStringAsync().Result;
-
-            StringFormatter.GET(_requestBody);
-            Assert.That(_requestBody.FromJSON<APIPetsData>().Id, Is.EqualTo(id));
+            StringFormatter.Get(requestBody);
+            Assert.That(requestBody.FromJson<ApiPetsData>().Id, Is.EqualTo(id));
         }
 
         [Test]
@@ -79,16 +91,26 @@ namespace APITest.APIWorkflow
         [TestCase(14)]
         [TestCase(15)]
         [TestCase(25)]
-        public void DELETE(int id)
+        public async Task Delete(int id)
         {
-            var petsData = new APIPetsData { Id = id };
-            var _requestBody = _client.DeleteAsync(petsData.Id.ToString()).Result;
-            switch (_requestBody.StatusCode)
+            var petsData = new ApiPetsData
             {
-                case HttpStatusCode.NotFound: Assert.That(_requestBody.StatusCode == HttpStatusCode.NotFound, "Not Found"); break;
-                case HttpStatusCode.OK: Assert.That(_requestBody.StatusCode == HttpStatusCode.OK, "OK"); break;
+                Id = id
+            };
+
+            var requestBody =
+                await Client.DeleteAsync(petsData.Id.ToString()).ConfigureAwait(false);
+
+            switch (requestBody.StatusCode)
+            {
+                case HttpStatusCode.NotFound:
+                    Assert.That(requestBody.StatusCode == HttpStatusCode.NotFound, "Not Found");
+                    break;
+                case HttpStatusCode.OK:
+                    Assert.That(requestBody.StatusCode == HttpStatusCode.OK, "OK");
+                    break;
             }
-            StringFormatter.DELETE(_requestBody.ReasonPhrase);
+            StringFormatter.Delete(requestBody.ReasonPhrase);
         }
     }
 }
